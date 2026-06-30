@@ -1,16 +1,16 @@
 import asyncio
 from aiogram import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.enums import ParseMode
 from config import BOT_TOKEN, ADMIN_IDS
 from database import init_db, add_user, set_admin
-from handlers.start import router as start_router
-from handlers.subscription import router as sub_router
-from handlers.calculator import router as calc_router
-from handlers.statistics import router as stat_router
-from handlers.work_calendar import router as cal_router
-from handlers.support import router as support_router
-from handlers.chat import router as chat_router
-from handlers.admin import router as admin_router
+from handlers_start import router as start_router
+from handlers_subscription import router as sub_router
+from handlers_calculator import router as calc_router
+from handlers_statistics import router as stat_router
+from handlers_work_calendar import router as cal_router
+from handlers_support import router as support_router
+from handlers_chat import router as chat_router
+from handlers_admin import router as admin_router
 from scheduler import start_scheduler
 
 async def setup_admins():
@@ -23,9 +23,8 @@ async def main():
     await init_db()
     await setup_admins()
     
-    bot = Bot(token=BOT_TOKEN)
-    storage = MemoryStorage()
-    dp = Dispatcher(bot, storage=storage)
+    bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
+    dp = Dispatcher()
     
     dp.include_router(start_router)
     dp.include_router(sub_router)
@@ -39,11 +38,7 @@ async def main():
     await start_scheduler(bot)
     
     print("Бот запущен!")
-    
-    try:
-        await dp.start_polling()
-    finally:
-        await bot.session.close()
+    await dp.start_polling(bot)
 
 if __name__ == "__main__":
     asyncio.run(main())
