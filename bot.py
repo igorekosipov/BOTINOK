@@ -1,9 +1,7 @@
 import asyncio
 from aiogram import Bot, Dispatcher
-from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
-from aiogram.client.session.aiohttp import AiohttpSession
-from config import BOT_TOKEN, ADMIN_IDS, PROXY_URL
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from config import BOT_TOKEN, ADMIN_IDS
 from database import init_db, add_user, set_admin
 from handlers.start import router as start_router
 from handlers.subscription import router as sub_router
@@ -25,20 +23,9 @@ async def main():
     await init_db()
     await setup_admins()
     
-    if PROXY_URL:
-        session = AiohttpSession(proxy=PROXY_URL)
-        print(f"Прокси: {PROXY_URL}")
-    else:
-        session = AiohttpSession()
-        print("Прокси не используется")
-    
-    bot = Bot(
-        token=BOT_TOKEN,
-        session=session,
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-    )
-    
-    dp = Dispatcher()
+    bot = Bot(token=BOT_TOKEN)
+    storage = MemoryStorage()
+    dp = Dispatcher(bot, storage=storage)
     
     dp.include_router(start_router)
     dp.include_router(sub_router)
@@ -52,7 +39,11 @@ async def main():
     await start_scheduler(bot)
     
     print("Бот запущен!")
-    await dp.start_polling(bot)
+    
+    try:
+        await dp.start_polling()
+    finally:
+        await bot.session.close()
 
 if __name__ == "__main__":
     asyncio.run(main())
