@@ -1,7 +1,8 @@
 import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
-from config import BOT_TOKEN, ADMIN_IDS
+from aiogram.client.session.aiohttp import AiohttpSession
+from config import BOT_TOKEN, ADMIN_IDS, PROXY_URL
 from database import init_db, add_user, set_admin
 from handlers_start import start_router
 from handlers_subscription import sub_router
@@ -23,7 +24,15 @@ async def main():
     await init_db()
     await setup_admins()
     
-    bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
+    # Настройка прокси
+    if PROXY_URL:
+        session = AiohttpSession(proxy=PROXY_URL)
+        print(f"Прокси: {PROXY_URL}")
+    else:
+        session = AiohttpSession()
+        print("Без прокси")
+    
+    bot = Bot(token=BOT_TOKEN, session=session, parse_mode=ParseMode.HTML)
     dp = Dispatcher()
     
     dp.include_router(start_router)
