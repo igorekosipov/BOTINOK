@@ -3,14 +3,14 @@ from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from config import BOT_TOKEN, ADMIN_IDS
 from database import init_db, add_user, set_admin
-from handlers_start import router as start_router
-from handlers_subscription import router as sub_router
-from handlers_calculator import router as calc_router
-from handlers_statistics import router as stat_router
-from handlers_work_calendar import router as cal_router
-from handlers_support import router as support_router
-from handlers_chat import router as chat_router
-from handlers_admin import router as admin_router
+from handlers_start import start_router
+from handlers_subscription import sub_router
+from handlers_calculator import calc_router
+from handlers_statistics import stat_router
+from handlers_work_calendar import cal_router
+from handlers_support import support_router
+from handlers_chat import chat_router
+from handlers_admin import admin_router
 from scheduler import start_scheduler
 
 async def setup_admins():
