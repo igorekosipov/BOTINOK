@@ -15,8 +15,6 @@ def get_payment_actions():
 
 def get_admin_check_keyboard(check_id: int):
     return InlineKeyboardMarkup(inline_keyboard=[
-        [
-            InlineKeyboardButton(text="✅ Подтвердить", callback_data=f"admin_confirm:{check_id}"),
-            InlineKeyboardButton(text="❌ Отклонить", callback_data=f"admin_decline:{check_id}")
-        ]
+        [InlineKeyboardButton(text="✅ Подтвердить", callback_data=f"admin_confirm:{check_id}"),
+         InlineKeyboardButton(text="❌ Отклонить", callback_data=f"admin_decline:{check_id}")]
     ])
