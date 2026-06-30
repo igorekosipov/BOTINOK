@@ -13,3 +13,5 @@ SUBSCRIPTION_PRICES = {
 
 PAYMENT_DETAILS = "Номер карты: 1234 5678 9012 3456 (Сбербанк)\nИли по номеру телефона +79001234567"
 CHAT_INVITE_LINK = "https://t.me/+abcdefgh"
+
+PROXY_URL = os.getenv("PROXY_URL", None)
